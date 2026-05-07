@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Black Skirts Archive : 전시 오브제 기획안</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&family=Nanum+Myeongjo:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f4f1ea; 
+            color: #222;
+        }
+
+        h1, h2, h3, .serif-text {
+            font-family: 'Nanum Myeongjo', serif;
+        }
+
+        /* 아날로그 노이즈 텍스처 효과 */
+        .noise-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Chart.js 컨테이너 */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        /* 커스텀 스크롤바 */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #e0dcd3; }
+        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+        /* 인터랙티브 카드 호버 효과 */
+        .object-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .object-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            border-color: #222;
+        }
+
+        /* 탭 버튼 커스텀 애니메이션 */
+        .zone-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* 이미지 영역 전용 텍스처 (로파이 감성) */
+        .image-placeholder-bg {
+            background: repeating-linear-gradient(
+                45deg,
+                #e5e2da,
+                #e5e2da 10px,
+                #dfdbce 10px,
+                #dfdbce 20px
+            );
+        }
+
+        /* 포스트잇 스타일 */
+        .post-it {
+            background: #ffeb3b;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            transform: rotate(-2deg);
+            transition: transform 0.2s;
+        }
+        .post-it:nth-child(even) { transform: rotate(2deg); background: #ffc107; }
+        .post-it:hover { transform: scale(1.05); z-index: 10; position: relative;}
+
+        /* 고퀄리티 이미지를 꽉 채우기 위한 컨테이너 스타일 */
+        .img-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .img-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 10;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .object-card:hover .img-container img {
+            transform: scale(1.08);
+        }
+    </style>
+</head>
+<body class="antialiased overflow-x-hidden">
+
+    <div class="noise-bg"></div>
+
+    <!-- Header / Hero Section -->
+    <header class="bg-[#111] text-[#f4f1ea] py-20 px-6 border-b-8 border-[#c13a3a] relative overflow-hidden">
+        <div class="max-w-5xl mx-auto relative z-10 text-center">
+            <p class="text-sm font-bold tracking-widest text-[#c13a3a] mb-4">EXHIBITION OBJECT PROPOSAL</p>
+            <h1 class="text-5xl md:text-7xl font-black mb-6 tracking-tighter">The Black Skirts Archive</h1>
+            <p class="text-xl md:text-2xl serif-text font-light text-gray-300 mb-8">사물로 읽는 조휴일 연대기</p>
+            <div class="w-24 h-1 bg-white mx-auto opacity-50 mb-8"></div>
+            <p class="max-w-2xl mx-auto text-gray-400 font-light leading-relaxed">
+                이 문서는 한국 인디 씬의 독보적인 싱어송라이터 '검정치마'의 전시 오브제 기획안입니다. <br>
+                단순한 물건의 나열이 아닌, 가사와 선율 속에 숨겨진 상징(Symbol)들을 발굴하여 <br>
+                4개의 테마 공간(Zone)에 맞게 재구성했습니다.
+            </p>
+        </div>
+        <div class="absolute top-10 left-10 w-32 h-32 border border-gray-700 rounded-full opacity-20"></div>
+        <div class="absolute bottom-10 right-10 text-9xl text-gray-800 opacity-20 font-black tracking-tighter">201</div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-6xl mx-auto px-6 py-16 space-y-24">
+
+        <!-- Section 1: Data Overview (Charts) -->
+        <section>
+            <div class="mb-10 text-center">
+                <h2 class="text-3xl font-bold mb-4">아카이브 데이터 요약</h2>
+                <p class="text-gray-600">수집된 전시 오브제의 메타데이터를 분석한 시각화 자료입니다.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 bg-white p-8 border border-gray-300 shadow-sm rounded-lg relative z-20">
+                <div class="flex flex-col items-center">
+                    <h3 class="text-xl serif-text font-bold mb-2">오브제 상징성 (팬덤 계급) 비율</h3>
+                    <p class="text-sm text-gray-500 mb-6 text-center">해당 오브제가 가장 큰 의미를 지니는 관람객 층</p>
+                    <div class="chart-container">
+                        <canvas id="symbolismChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="flex flex-col items-center">
+                    <h3 class="text-xl serif-text font-bold mb-2">테마(Zone)별 오브제 배치 수량</h3>
+                    <p class="text-sm text-gray-500 mb-6 text-center">앨범 서사에 따른 공간별 전시물 밀도</p>
+                    <div class="chart-container">
+                        <canvas id="zoneChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Interactive Archive Explorer -->
+        <section id="explorer">
+            <div class="mb-10 text-center">
+                <h2 class="text-3xl font-bold mb-4">공간별 오브제 아카이브 탐색</h2>
+                <p class="text-gray-600">아래 앨범 탭을 클릭하여 각 Zone의 분위기와 배치될 핵심 전시품을 확인하세요.</p>
+            </div>
+
+            <!-- 시각화된 Zone Navigation Tabs (카드형) -->
+            <div class="flex flex-wrap justify-center gap-4 mb-14 relative z-20" id="zoneTabs">
+                
+                <!-- Zone 1 -->
+                <button onclick="renderZone(1)" class="zone-btn flex flex-col items-center p-3 border-2 border-[#222] bg-[#222] text-[#f4f1ea] transform -translate-y-3 shadow-xl w-36 sm:w-44 group cursor-pointer" data-zone="1">
+                    <span class="text-xs font-bold text-gray-400 mb-1">Zone 1</span>
+                    <span class="text-sm sm:text-base font-black mb-3">201</span>
+                    <div class="w-full aspect-square overflow-hidden border border-gray-500">
+                        <!-- 업로드 이미지 1 -->
+                        <img src="image_f98292.jpg" alt="201 앨범 커버" class="w-full h-full object-cover transition-transform group-hover:scale-110" onerror="this.onerror=null; this.src='https://via.placeholder.com/150/222222/FFFFFF?text=201';">
+                    </div>
+                </button>
+
+                <!-- Zone 2 -->
+                <button onclick="renderZone(2)" class="zone-btn flex flex-col items-center p-3 border-2 border-[#222] bg-white text-[#222] hover:bg-gray-100 transform translate-y-0 w-36 sm:w-44 group cursor-pointer" data-zone="2">
+                    <span class="text-xs font-bold text-gray-500 mb-1">Zone 2</span>
+                    <span class="text-sm sm:text-base font-black mb-3">TEAM BABY</span>
+                    <div class="w-full aspect-square overflow-hidden border border-gray-300">
+                        <!-- 업로드 이미지 2 -->
+                        <img src="image_f9823e.jpg" alt="TEAM BABY 앨범 커버" class="w-full h-full object-cover transition-transform group-hover:scale-110" onerror="this.onerror=null; this.src='https://via.placeholder.com/150/FFFFFF/222222?text=TEAM+BABY';">
+                    </div>
+                </button>
+
+                <!-- Zone 3 -->
+                <button onclick="renderZone(3)" class="zone-btn flex flex-col items-center p-3 border-2 border-[#222] bg-white text-[#222] hover:bg-gray-100 transform translate-y-0 w-36 sm:w-44 group cursor-pointer" data-zone="3">
+                    <span class="text-xs font-bold text-gray-500 mb-1">Zone 3</span>
+                    <span class="text-sm sm:text-base font-black mb-3">THIRSTY</span>
+                    <div class="w-full aspect-square overflow-hidden border border-gray-300">
+                        <!-- 업로드 이미지 3 -->
+                        <img src="image_f981fe.png" alt="THIRSTY 앨범 커버" class="w-full h-full object-cover transition-transform group-hover:scale-110" onerror="this.onerror=null; this.src='https://via.placeholder.com/150/FFFFFF/222222?text=THIRSTY';">
+                    </div>
+                </button>
+
+                <!-- Zone 4 -->
+                <button onclick="renderZone(4)" class="zone-btn flex flex-col items-center p-3 border-2 border-[#222] bg-white text-[#222] hover:bg-gray-100 transform translate-y-0 w-36 sm:w-44 group cursor-pointer" data-zone="4">
+                    <span class="text-xs font-bold text-gray-500 mb-1">Zone 4</span>
+                    <span class="text-sm sm:text-base font-black mb-3">TEEN TROUBLES</span>
+                    <div class="w-full aspect-square overflow-hidden border border-gray-300">
+                        <!-- 업로드 이미지 4 -->
+                        <img src="image_f981bd.jpg" alt="TEEN TROUBLES 앨범 커버" class="w-full h-full object-cover transition-transform group-hover:scale-110" onerror="this.onerror=null; this.src='https://via.placeholder.com/150/FFFFFF/222222?text=TEEN+TROUBLES';">
+                    </div>
+                </button>
+
+            </div>
+
+            <!-- Dynamic Zone Content -->
+            <div id="zoneContentArea" class="bg-white p-8 md:p-12 border border-gray-300 shadow-sm relative overflow-hidden min-h-[500px]">
+                <!-- JS will inject content here -->
+            </div>
+        </section>
+
+        <!-- Section 3: Interactive Guestbook -->
+        <section class="bg-[#2c3e50] text-[#f4f1ea] p-8 md:p-16 rounded-2xl shadow-xl relative z-20">
+            <div class="max-w-3xl mx-auto">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold mb-4 text-[#ffeb3b]">Interactive Object : '나랑 아니면' 방명록</h2>
+                    <p class="text-gray-300 font-light leading-relaxed">
+                        전시의 마지막 동선에 배치될 거대한 방명록 존의 시뮬레이션입니다.<br>
+                        검정치마의 노래를 들으며 떠오른 생각, 혹은 누군가에게 전하고 싶은 말을 남겨주세요.<br>
+                        여러분의 메시지 하나하나가 모여 전시의 마지막 오브제를 완성합니다.
+                    </p>
+                </div>
+
+                <form id="guestbookForm" class="bg-white/10 p-6 rounded-lg backdrop-blur-sm mb-10 border border-white/20">
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <input type="text" id="gbName" placeholder="작성자 (예: 무당벌레)" required class="px-4 py-3 bg-white/20 text-white placeholder-white/70 border border-white/30 rounded focus:outline-none focus:border-[#ffeb3b] md:w-1/4">
+                        <input type="text" id="gbMessage" placeholder="기억나는 가사나 메시지를 남겨주세요." required class="px-4 py-3 bg-white/20 text-white placeholder-white/70 border border-white/30 rounded focus:outline-none focus:border-[#ffeb3b] flex-grow">
+                        <button type="submit" class="bg-[#ffeb3b] text-[#2c3e50] font-bold px-8 py-3 rounded hover:bg-yellow-400 transition-colors">기록하기</button>
+                    </div>
+                </form>
+
+                <div id="messageWall" class="flex flex-wrap justify-center gap-4 p-4 min-h-[200px] border-t border-white/20 pt-8">
+                    <!-- Initial mock notes -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-200 py-8 text-center text-gray-500 text-sm mt-20 border-t border-gray-300 relative z-20">
+        <p>기획안 작성자 : 12213240 김민혁 / 12252424 이제우</p>
+        <p class="mt-2">본 웹페이지는 '검정치마 전시 오브제 기획안' 제출을 위한 시뮬레이션 프로토타입입니다.</p>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        const exhibitionData = {
+            zones: [
+                {
+                    id: 1,
+                    title: "날것의 낭만과 인디씬의 등장",
+                    desc: "어두운 지하실 밴드 연습실 무드. 바닥에 굴러다니는 맥주병과 낡은 전단지. 초기 검정치마의 키치하고 투박하지만 솔직했던 사랑을 상징합니다.",
+                    bgImageText: "BASEMENT 201",
+                    color: "text-blue-900",
+                    bgLight: "bg-blue-50"
+                },
+                {
+                    id: 2,
+                    title: "사랑의 밝은 면, 아늑한 영원",
+                    desc: "가장 따뜻하고 완벽한 사랑을 노래했던 3집 Part.1의 공간. 사진 찍기 좋은 화이트/파스텔 톤에 빛바랜 필름 사진 질감이 감도는 아늑한 분위기입니다.",
+                    bgImageText: "TEAM BABY",
+                    color: "text-red-700",
+                    bgLight: "bg-red-50"
+                },
+                {
+                    id: 3,
+                    title: "사랑의 이면, 냉소와 갈증",
+                    desc: "사랑의 실패, 집착, 파괴적인 감정을 다룬 3집 Part.2. 붉고 푸른 네온 조명과 흩어진 구겨진 가사지들이 묘한 단절감을 만들어냅니다.",
+                    bgImageText: "THIRSTY",
+                    color: "text-purple-900",
+                    bgLight: "bg-purple-50"
+                },
+                {
+                    id: 4,
+                    title: "1999년 뉴저지, 청춘의 아카이브",
+                    desc: "조휴일의 17세 시절 실화를 바탕으로 한 90년대 미국 하이틴 펑크 감성. 낡은 라커룸과 캠코더 아트월이 전시의 하이라이트를 장식합니다.",
+                    bgImageText: "TEEN TROUBLES",
+                    color: "text-green-800",
+                    bgLight: "bg-green-50"
+                }
+            ],
+            objects: [
+                // Zone 1
+                { zoneId: 1, icon: "🎸", imageTag: "(추후 기입 예정)", category: "악기", name: "낡은 민트색 펜더 기타", material: "목재, 금속", class: "교주(조휴일)", purpose: "초기 펑크/인디 록 사운드 메이킹", lyrics: "우린 춤추는 무당벌레~ (Antifreeze)", desc: "1집 '201' 특유의 키치하고 날것의 펑크 사운드를 만들어낸 주역. 바디 곳곳에 조휴일이 붙인 스티커들이 낡게 바래 있음.", owner: "도기리치 아카이브" },
+                { zoneId: 1, icon: "👟", imageTag: "(추후 기입 예정)", category: "의류", name: "빨간색 컨버스 하이", material: "캔버스 천, 고무", class: "대중~코어팬", purpose: "무대 의상", lyrics: "여름엔 덥고 겨울엔 추운 그런 신발", desc: "멈추지 않는 청춘의 발걸음을 상징. 밑창이 심하게 닳아있음.", owner: "팬 기증" },
+                { zoneId: 1, icon: "🚩", imageTag: "(추후 기입 예정)", category: "소품", name: "DOGGY RICH 깃발", material: "나일론 천", class: "코어팬", purpose: "레이블 상징", lyrics: "내 음악은 강아지도 춤추게 한다", desc: "1인 기획사 로고. 팬들에게는 종교적 깃발과도 같음.", owner: "도기리치 아카이브" },
+                // Zone 2
+                { zoneId: 2, icon: "🪑", imageTag: "(추후 기입 예정)", category: "가구", name: "붉은 벨벳 의자", material: "목재, 벨벳 천", class: "대중", purpose: "MV 소품, 포토존", lyrics: "넌 내 모든 거야 내 여름이고 내 꿈이야 (Everything)", desc: "뮤직비디오에 등장한 그 의자. 관람객 착석 가능.", owner: "스튜디오 대여" },
+                { zoneId: 2, icon: "🖼️", imageTag: "(추후 기입 예정)", category: "기록물", name: "흑백 결혼사진", material: "인화지, 나무 액자", class: "교주(조휴일)", purpose: "앨범 커버", lyrics: "나랑 아니면 누구랑 사랑 할 수 있겠니", desc: "Team Baby 커버 원본 사진. 영원한 사랑에 대한 사적인 기록.", owner: "개인 소장" },
+                { zoneId: 2, icon: "📹", imageTag: "(추후 기입 예정)", category: "기기", name: "90년대 캠코더", material: "플라스틱, 렌즈", class: "코어팬", purpose: "뮤비 촬영 기법", lyrics: "야 나랑 놀자, 어디 가지 말고", desc: "뷰파인더로 미공개 로파이(Lo-fi) 영상 재생 가능.", owner: "자체 제작" },
+                // Zone 3
+                { zoneId: 3, icon: "📞", imageTag: "(추후 기입 예정)", category: "설치물", name: "외딴 공중전화 부스", material: "철제, 유리", class: "코어팬", purpose: "단독 청음소", lyrics: "내 줄어들었네, 나를 기다린 줄 알았던", desc: "수화기를 들면 빗소리와 데모 버전 음악이 흘러나옴.", owner: "자체 제작" },
+                { zoneId: 3, icon: "📄", imageTag: "(추후 기입 예정)", category: "기록물", name: "구겨진 가사지", material: "모조지, 잉크", class: "교주(조휴일)", purpose: "작곡 기록", lyrics: "난 그대의 자랑이 아니에요", desc: "아크릴 바닥 밑에 흩어져 있는 수정 전 가사 원고들.", owner: "아카이브" },
+                { zoneId: 3, icon: "🔑", imageTag: "(추후 기입 예정)", category: "소품", name: "모텔 열쇠 뭉치", material: "아크릴, 철제", class: "코어팬", purpose: "공간적 메타포", lyrics: "하와이 검은 모래", desc: "방황과 안착하지 못하는 사랑을 은유하는 오브제.", owner: "자체 제작" },
+                // Zone 4
+                { zoneId: 4, icon: "🎫", imageTag: "(추후 기입 예정)", category: "소품", name: "Flying Bobs 티켓", material: "코팅 지류", class: "팬덤 전체", purpose: "탑승권 (굿즈)", lyrics: "우리는 빙글빙글 도는 Flying Bobs 위에 있어", desc: "관람객 전원에게 배부. 1999년의 여름으로 돌아가는 매개체.", owner: "전시 굿즈" },
+                { zoneId: 4, icon: "🗄️", imageTag: "(추후 기입 예정)", category: "가구", name: "녹슨 철제 라커룸", material: "철제", class: "교주(조휴일)", purpose: "포토존 배경", lyrics: "매미들, Electra", desc: "문 내부에 실제 성적표와 폴라로이드 사진 부착.", owner: "섭외 물품" },
+                { zoneId: 4, icon: "👕", imageTag: "(추후 기입 예정)", category: "의류", name: "앨범 커버 반팔티", material: "면 100%", class: "팬덤 전체", purpose: "공식 MD", lyrics: "내 어린 날의 일기장을 훔쳐보는 기분", desc: "팬들의 교복. 땀과 열정이 배어있는 빈티지 워싱 처리.", owner: "굿즈팀" },
+                { zoneId: 4, icon: "🛠️", imageTag: "(추후 기입 예정)", category: "도구", name: "MAKITA 전동 드릴", material: "금속, 플라스틱", class: "코어팬", purpose: "인더스트리얼 무드", lyrics: "Teen Troubles", desc: "거친 청춘의 파괴적인 에너지를 은유하는 오마주 소품.", owner: "자체 구매" }
+            ]
+        };
+
+        function initCharts() {
+            const classCounts = { "교주(조휴일)": 0, "코어팬": 0, "대중(또는 전체)": 0 };
+            const zoneCounts = { "Zone 1": 0, "Zone 2": 0, "Zone 3": 0, "Zone 4": 0 };
+
+            exhibitionData.objects.forEach(obj => {
+                if(obj.class.includes("교주")) classCounts["교주(조휴일)"]++;
+                else if(obj.class.includes("코어")) classCounts["코어팬"]++;
+                else classCounts["대중(또는 전체)"]++;
+                zoneCounts[`Zone ${obj.zoneId}`]++;
+            });
+
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom', labels: { font: { family: "'Noto Sans KR', sans-serif" } } }
+                }
+            };
+
+            const ctxSymbol = document.getElementById('symbolismChart').getContext('2d');
+            new Chart(ctxSymbol, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(classCounts),
+                    datasets: [{
+                        data: Object.values(classCounts),
+                        backgroundColor: ['#2c3e50', '#c13a3a', '#e6a838'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    cutout: '60%',
+                    plugins: { ...commonOptions.plugins, tooltip: { bodyFont: { family: "'Noto Sans KR', sans-serif" } } }
+                }
+            });
+
+            const ctxZone = document.getElementById('zoneChart').getContext('2d');
+            new Chart(ctxZone, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(zoneCounts),
+                    datasets: [{
+                        label: '배치된 오브제 수 (개)',
+                        data: Object.values(zoneCounts),
+                        backgroundColor: '#6a7c6e',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                    }
+                }
+            });
+        }
+
+        function renderZone(zoneId) {
+            document.querySelectorAll('.zone-btn').forEach(btn => {
+                if(parseInt(btn.getAttribute('data-zone')) === zoneId) {
+                    // 활성화 상태 디자인
+                    btn.classList.remove('bg-white', 'text-[#222]', 'translate-y-0');
+                    btn.classList.add('bg-[#222]', 'text-[#f4f1ea]', '-translate-y-3', 'shadow-xl');
+                    
+                    // 내부 보조 텍스트 색상 변경 (대비율 조정)
+                    btn.querySelector('span:first-child').classList.remove('text-gray-500');
+                    btn.querySelector('span:first-child').classList.add('text-gray-400');
+                    btn.querySelector('.aspect-square').classList.remove('border-gray-300');
+                    btn.querySelector('.aspect-square').classList.add('border-gray-500');
+                } else {
+                    // 비활성화 상태 디자인
+                    btn.classList.add('bg-white', 'text-[#222]', 'translate-y-0');
+                    btn.classList.remove('bg-[#222]', 'text-[#f4f1ea]', '-translate-y-3', 'shadow-xl');
+                    
+                    // 내부 보조 텍스트 원복
+                    btn.querySelector('span:first-child').classList.add('text-gray-500');
+                    btn.querySelector('span:first-child').classList.remove('text-gray-400');
+                    btn.querySelector('.aspect-square').classList.add('border-gray-300');
+                    btn.querySelector('.aspect-square').classList.remove('border-gray-500');
+                }
+            });
+
+            const zoneData = exhibitionData.zones.find(z => z.id === zoneId);
+            const items = exhibitionData.objects.filter(o => o.zoneId === zoneId);
+            const contentArea = document.getElementById('zoneContentArea');
+
+            let htmlString = `
+                <div class="absolute -top-10 -right-10 text-8xl md:text-9xl font-black text-gray-100 opacity-50 select-none pointer-events-none z-0">
+                    ${zoneData.bgImageText}
+                </div>
+                
+                <div class="relative z-10 ${zoneData.color}">
+                    <h3 class="text-2xl font-black mb-4 flex items-center gap-3">
+                        <span class="inline-block w-8 h-1 bg-current"></span>
+                        ${zoneData.title}
+                    </h3>
+                    <p class="text-gray-700 mb-10 max-w-2xl font-light leading-relaxed">${zoneData.desc}</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            `;
+
+            items.forEach(item => {
+                htmlString += `
+                    <div class="object-card border border-gray-300 bg-white flex flex-col h-full rounded-md relative overflow-hidden group shadow-sm hover:shadow-xl">
+                        
+                        <div class="h-60 sm:h-72 w-full border-b border-gray-300 relative img-container">
+                            <div class="absolute -right-4 -bottom-4 text-8xl opacity-10 transform -rotate-12 select-none z-0">${item.icon}</div>
+                            <div class="z-10 w-full h-full flex items-center justify-center text-gray-500 font-bold opacity-80">
+                                ${item.imageTag}
+                            </div>
+                        </div>
+
+                        <div class="p-6 flex flex-col flex-grow relative">
+                            <div class="absolute -top-4 right-4 text-xs font-bold text-[#222] bg-[#f4f1ea] border border-gray-300 px-3 py-1 shadow-sm rounded-full z-10">
+                                ${item.category}
+                            </div>
+                            
+                            <h4 class="text-xl font-bold mb-3 serif-text mt-2">${item.name}</h4>
+                            
+                            <div class="mt-2 text-sm text-gray-600 mb-4 flex-grow space-y-1.5">
+                                <p><span class="font-bold text-gray-800">소재/크기:</span> ${item.material}</p>
+                                <p><span class="font-bold text-gray-800">목적:</span> ${item.purpose}</p>
+                                <p class="flex items-center gap-2">
+                                    <span class="font-bold text-gray-800">상징:</span> 
+                                    <span class="bg-gray-100 px-2 py-0.5 rounded text-xs border border-gray-200">${item.class}</span>
+                                </p>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-4 rounded-md text-sm border-l-4 border-[#222]">
+                                <p class="italic text-gray-700 mb-2 font-serif font-bold">"${item.lyrics}"</p>
+                                <p class="text-gray-600 leading-relaxed">${item.desc}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            htmlString += `</div></div>`;
+            
+            contentArea.style.opacity = 0;
+            setTimeout(() => {
+                contentArea.innerHTML = htmlString;
+                contentArea.style.opacity = 1;
+                contentArea.style.transition = 'opacity 0.4s ease-in-out';
+            }, 150);
+        }
+
+        const mockMessages = [
+            { name: "Team Baby", msg: "넌 내 모든거야 내 여름이고 내 꿈이야." },
+            { name: "락키드", msg: "99년도 뉴저지 냄새가 나요ㅠㅠ" },
+            { name: "익명", msg: "나랑 아니면 누구랑 사랑할 수 있겠니" }
+        ];
+
+        function renderMessages() {
+            const wall = document.getElementById('messageWall');
+            wall.innerHTML = '';
+            mockMessages.forEach(m => {
+                const note = document.createElement('div');
+                note.className = 'post-it p-4 w-48 text-gray-800 font-medium text-sm flex flex-col justify-between';
+                note.innerHTML = `
+                    <p class="mb-4 leading-relaxed">"${m.msg}"</p>
+                    <p class="text-right text-xs text-gray-600 border-t border-yellow-300 pt-2">- ${m.name}</p>
+                `;
+                wall.appendChild(note);
+            });
+        }
+
+        document.getElementById('guestbookForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const nameInput = document.getElementById('gbName');
+            const msgInput = document.getElementById('gbMessage');
+            
+            if(nameInput.value && msgInput.value) {
+                mockMessages.unshift({ name: nameInput.value, msg: msgInput.value }); 
+                if(mockMessages.length > 10) mockMessages.pop(); 
+                renderMessages();
+                nameInput.value = '';
+                msgInput.value = '';
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            renderZone(1); 
+            renderMessages();
+        });
+    </script>
+</body>
+</html>
