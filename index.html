@@ -7,9 +7,6 @@
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&family=Nanum+Myeongjo:wght@400;700&display=swap');
@@ -32,23 +29,6 @@
             z-index: 50;
             opacity: 0.04;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
-
-        /* Chart.js 컨테이너 */
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px;
-            max-height: 350px;
-        }
-        
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px;
-            }
         }
 
         /* 커스텀 스크롤바 */
@@ -119,6 +99,85 @@
         .object-card:hover .img-container img {
             transform: scale(1.08);
         }
+
+        /* AI 도슨트 챗봇 스타일 */
+        #ai-chat-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        #ai-chat-btn:hover {
+            transform: scale(1.1);
+        }
+        #ai-chat-panel {
+            position: fixed;
+            bottom: 90px;
+            right: 30px;
+            width: 350px;
+            max-height: 500px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform-origin: bottom right;
+            transition: all 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.8);
+        }
+        #ai-chat-panel.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
+        #chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 350px;
+        }
+        .chat-bubble {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 18px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .chat-bubble.user {
+            align-self: flex-end;
+            background-color: #222;
+            color: #f4f1ea;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-bubble.ai {
+            align-self: flex-start;
+            background-color: #e5e2da;
+            color: #222;
+            border-bottom-left-radius: 4px;
+        }
+        .typing-indicator {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background-color: #888;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out both;
+            margin: 0 2px;
+        }
+        .typing-indicator:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
     </style>
 </head>
 <body class="antialiased overflow-x-hidden">
@@ -145,29 +204,20 @@
     <!-- Main Content Container -->
     <main class="max-w-6xl mx-auto px-6 py-16 space-y-24">
 
-        <!-- Section 1: Data Overview (Charts) -->
+        <!-- Section 1: Opening Video -->
         <section>
-            <div class="mb-10 text-center">
-                <h2 class="text-3xl font-bold mb-4">아카이브 데이터 요약</h2>
-                <p class="text-gray-600">수집된 전시 오브제의 메타데이터를 분석한 시각화 자료입니다.</p>
+            <div class="mb-10 text-center relative z-20">
+                <h2 class="text-3xl font-bold mb-4">Opening Archive</h2>
+                <p class="text-gray-600">전시 관람 전, 검정치마의 무드를 영상으로 먼저 만나보세요.</p>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 bg-white p-8 border border-gray-300 shadow-sm rounded-lg relative z-20">
-                <div class="flex flex-col items-center">
-                    <h3 class="text-xl serif-text font-bold mb-2">오브제 상징성 (팬덤 계급) 비율</h3>
-                    <p class="text-sm text-gray-500 mb-6 text-center">해당 오브제가 가장 큰 의미를 지니는 관람객 층</p>
-                    <div class="chart-container">
-                        <canvas id="symbolismChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="flex flex-col items-center">
-                    <h3 class="text-xl serif-text font-bold mb-2">테마(Zone)별 오브제 배치 수량</h3>
-                    <p class="text-sm text-gray-500 mb-6 text-center">앨범 서사에 따른 공간별 전시물 밀도</p>
-                    <div class="chart-container">
-                        <canvas id="zoneChart"></canvas>
-                    </div>
-                </div>
+            <div class="relative w-full overflow-hidden rounded-xl shadow-2xl border border-gray-300 z-20 bg-[#222]" style="padding-top: 56.25%;">
+                <iframe class="absolute top-0 left-0 w-full h-full" 
+                        src="https://www.youtube.com/embed/bp5DNQ1yfss" 
+                        title="YouTube video player" frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen>
+                </iframe>
             </div>
         </section>
 
@@ -263,6 +313,35 @@
         <p class="mt-2">본 웹페이지는 '검정치마 전시 오브제 기획안' 제출을 위한 시뮬레이션 프로토타입입니다.</p>
     </footer>
 
+    <!-- AI 도슨트 플로팅 버튼 & 패널 -->
+    <button id="ai-chat-btn" class="bg-[#c13a3a] text-white p-4 rounded-full shadow-lg flex items-center justify-center hover:bg-red-800">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+    </button>
+
+    <div id="ai-chat-panel" class="border border-gray-300">
+        <div class="bg-[#222] text-[#f4f1ea] p-4 flex justify-between items-center rounded-t-xl">
+            <div>
+                <h3 class="font-bold serif-text flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+                    AI 도슨트
+                </h3>
+                <p class="text-xs text-gray-400 mt-1 font-light">전시나 검정치마에 대해 물어보세요.</p>
+            </div>
+            <button id="close-chat-btn" class="text-gray-400 hover:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+        </div>
+        <div id="chat-messages" class="bg-[#fcfbf9]">
+            <div class="chat-bubble ai">
+                안녕하세요! The Black Skirts Archive의 AI 도슨트입니다. 전시 관람 중 궁금한 점이 있으신가요?
+            </div>
+        </div>
+        <div class="p-3 bg-white border-t border-gray-200 flex gap-2">
+            <input type="text" id="chat-input" class="flex-grow px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:border-[#c13a3a] bg-gray-50" placeholder="메시지를 입력하세요...">
+            <button id="send-chat-btn" class="bg-[#222] text-white px-4 py-2 rounded-md text-sm font-bold hover:bg-gray-800 transition-colors">전송</button>
+        </div>
+    </div>
+
     <!-- JavaScript Logic -->
     <script>
         const exhibitionData = {
@@ -320,65 +399,6 @@
                 { zoneId: 4, icon: "🛠️", imageTag: "(추후 기입 예정)", category: "도구", name: "MAKITA 전동 드릴", material: "금속, 플라스틱", class: "코어팬", purpose: "인더스트리얼 무드", lyrics: "Teen Troubles", desc: "거친 청춘의 파괴적인 에너지를 은유하는 오마주 소품.", owner: "자체 구매" }
             ]
         };
-
-        function initCharts() {
-            const classCounts = { "교주(조휴일)": 0, "코어팬": 0, "대중(또는 전체)": 0 };
-            const zoneCounts = { "Zone 1": 0, "Zone 2": 0, "Zone 3": 0, "Zone 4": 0 };
-
-            exhibitionData.objects.forEach(obj => {
-                if(obj.class.includes("교주")) classCounts["교주(조휴일)"]++;
-                else if(obj.class.includes("코어")) classCounts["코어팬"]++;
-                else classCounts["대중(또는 전체)"]++;
-                zoneCounts[`Zone ${obj.zoneId}`]++;
-            });
-
-            const commonOptions = {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'bottom', labels: { font: { family: "'Noto Sans KR', sans-serif" } } }
-                }
-            };
-
-            const ctxSymbol = document.getElementById('symbolismChart').getContext('2d');
-            new Chart(ctxSymbol, {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(classCounts),
-                    datasets: [{
-                        data: Object.values(classCounts),
-                        backgroundColor: ['#2c3e50', '#c13a3a', '#e6a838'],
-                        borderWidth: 0,
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    ...commonOptions,
-                    cutout: '60%',
-                    plugins: { ...commonOptions.plugins, tooltip: { bodyFont: { family: "'Noto Sans KR', sans-serif" } } }
-                }
-            });
-
-            const ctxZone = document.getElementById('zoneChart').getContext('2d');
-            new Chart(ctxZone, {
-                type: 'bar',
-                data: {
-                    labels: Object.keys(zoneCounts),
-                    datasets: [{
-                        label: '배치된 오브제 수 (개)',
-                        data: Object.values(zoneCounts),
-                        backgroundColor: '#6a7c6e',
-                        borderRadius: 4
-                    }]
-                },
-                options: {
-                    ...commonOptions,
-                    scales: {
-                        y: { beginAtZero: true, ticks: { stepSize: 1 } }
-                    }
-                }
-            });
-        }
 
         function renderZone(zoneId) {
             document.querySelectorAll('.zone-btn').forEach(btn => {
@@ -504,8 +524,87 @@
             }
         });
 
+        // --- AI Docent Logic ---
+        const chatBtn = document.getElementById('ai-chat-btn');
+        const chatPanel = document.getElementById('ai-chat-panel');
+        const closeChatBtn = document.getElementById('close-chat-btn');
+        const sendChatBtn = document.getElementById('send-chat-btn');
+        const chatInput = document.getElementById('chat-input');
+        const chatMessages = document.getElementById('chat-messages');
+
+        // Toggle Chat Panel
+        chatBtn.addEventListener('click', () => chatPanel.classList.add('active'));
+        closeChatBtn.addEventListener('click', () => chatPanel.classList.remove('active'));
+
+        // Gemini API Call
+        async function generateAIResponse(userMessage) {
+            const apiKey = ""; // API Key는 환경에서 자동으로 주입됩니다.
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+            
+            const systemPrompt = `당신은 'The Black Skirts Archive' 전시회의 AI 도슨트입니다. 
+            관람객에게 인디 밴드 '검정치마(조휴일)'의 음악, 앨범(201, Team Baby, Thirsty, Teen Troubles), 그리고 전시에 대해 친절하게 설명해주세요. 
+            답변은 한국어로 작성하고, 검정치마 음악 특유의 노스탤지어가 느껴지면서도 약간 시니컬한 톤을 유지해주세요. 
+            가급적 3~4문장 내외로 간결하게 답변하세요.`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userMessage }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates[0].content) {
+                    return result.candidates[0].content.parts[0].text;
+                }
+                return "죄송합니다. 도슨트 노트에서 해당 정보를 찾지 못했어요.";
+            } catch (error) {
+                console.error("API Error:", error);
+                return "앗, 도슨트 시스템에 잠시 오류가 생겼습니다. 나중에 다시 시도해주세요.";
+            }
+        }
+
+        // Handle UI Messaging
+        async function handleSendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            // Add User Message
+            addMessageToChat(message, 'user');
+            chatInput.value = '';
+
+            // Add Loading Indicator
+            const loadingId = 'loading-' + Date.now();
+            addMessageToChat('<div class="typing-indicator"></div><div class="typing-indicator"></div><div class="typing-indicator"></div>', 'ai', loadingId);
+            
+            // Fetch AI Response
+            const responseText = await generateAIResponse(message);
+            
+            // Remove Loading & Add AI Response
+            document.getElementById(loadingId)?.remove();
+            addMessageToChat(responseText, 'ai');
+        }
+
+        function addMessageToChat(text, sender, id = null) {
+            const div = document.createElement('div');
+            div.className = `chat-bubble ${sender}`;
+            if (id) div.id = id;
+            div.innerHTML = text.replace(/\n/g, '<br>');
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        sendChatBtn.addEventListener('click', handleSendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleSendMessage();
+        });
+
         window.addEventListener('DOMContentLoaded', () => {
-            initCharts();
             renderZone(1); 
             renderMessages();
         });
