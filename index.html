@@ -465,7 +465,9 @@
                     desc: "어두운 지하실 밴드 연습실 무드. 바닥에 굴러다니는 맥주병과 낡은 전단지. 초기 검정치마의 키치하고 투박하지만 솔직했던 사랑을 상징합니다.",
                     bgImageText: "201",
                     color: "text-blue-900",
-                    bgLight: "bg-blue-50"
+                    bgLight: "bg-blue-50",
+                    audioSrc: "The Black Skirts - Antifreeze.mp3", 
+                    songTitle: "Antifreeze"
                 },
                 {
                     id: 2,
@@ -473,7 +475,9 @@
                     desc: "가장 따뜻하고 완벽한 사랑을 노래했던 3집 Part.1의 공간. 사진 찍기 좋은 화이트/파스텔 톤에 빛바랜 필름 사진 질감이 감도는 아늑한 분위기입니다.",
                     bgImageText: "TEAM BABY",
                     color: "text-red-700",
-                    bgLight: "bg-red-50"
+                    bgLight: "bg-red-50",
+                    audioSrc: "The Black Skirts - Big Love.mp3", 
+                    songTitle: "Big Love"
                 },
                 {
                     id: 3,
@@ -481,7 +485,9 @@
                     desc: "사랑의 실패, 집착, 파괴적인 감정을 다룬 3집 Part.2. 붉고 푸른 네온 조명과 흩어진 구겨진 가사지들이 묘한 단절감을 만들어냅니다.",
                     bgImageText: "THIRSTY",
                     color: "text-purple-900",
-                    bgLight: "bg-purple-50"
+                    bgLight: "bg-purple-50",
+                    audioSrc: "Hawaiian black sand.mp3", 
+                    songTitle: "Hawaiian black sand"
                 },
                 {
                     id: 4,
@@ -489,7 +495,9 @@
                     desc: "조휴일의 17세 시절 실화를 바탕으로 한 90년대 미국 하이틴 펑크 감성. 낡은 라커룸과 캠코더 아트월이 전시의 하이라이트를 장식합니다.",
                     bgImageText: "TEEN TROUBLES",
                     color: "text-green-800",
-                    bgLight: "bg-green-50"
+                    bgLight: "bg-green-50",
+                    audioSrc: "The Black Skirts - Flying Bobs.mp3", 
+                    songTitle: "Flying Bobs"
                 }
             ],
             objects: [
@@ -521,6 +529,44 @@
             ]
         };
 
+     // ---------------------------------------------------------------------------------
+        // [2] 오디오 플레이어 & UI 로직
+        // ---------------------------------------------------------------------------------
+        const bgmPlayer = document.getElementById('bgm-player');
+        const playBtn = document.getElementById('toggle-music-btn');
+        const iconPlay = document.getElementById('icon-play');
+        const iconPause = document.getElementById('icon-pause');
+        const playerWidget = document.getElementById('music-player-widget');
+        const trackTitleDisplay = document.getElementById('track-title-display');
+        
+        let isUserInteracted = false; // 브라우저 자동재생 정책(Autoplay Policy) 우회를 위한 변수
+
+        // 재생/일시정지 상태에 따라 UI(아이콘 모양, 레코드판 회전)를 업데이트하는 함수
+        function updatePlayerUI() {
+            if (bgmPlayer.paused) {
+                // 멈췄을 때
+                iconPlay.classList.remove('hidden');
+                iconPause.classList.add('hidden');
+                playerWidget.classList.remove('playing'); // 레코드판 회전 멈춤
+            } else {
+                // 재생 중일 때
+                iconPlay.classList.add('hidden');
+                iconPause.classList.remove('hidden');
+                playerWidget.classList.add('playing'); // 레코드판 회전 시작
+            }
+        }
+
+        // 재생/일시정지 버튼 클릭 이벤트
+        playBtn.addEventListener('click', () => {
+            isUserInteracted = true;
+            if (bgmPlayer.paused) {
+                bgmPlayer.play().then(() => updatePlayerUI());
+            } else {
+                bgmPlayer.pause();
+                updatePlayerUI();
+            }
+        });
+        
         function renderZone(zoneId) {
             document.querySelectorAll('.zone-btn').forEach(btn => {
                 if(parseInt(btn.getAttribute('data-zone')) === zoneId) {
