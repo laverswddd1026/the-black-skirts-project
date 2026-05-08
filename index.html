@@ -596,6 +596,20 @@
             const items = exhibitionData.objects.filter(o => o.zoneId === zoneId);
             const contentArea = document.getElementById('zoneContentArea');
 
+            // 🎵 음악 변경 로직 
+            // 1) 오디오 태그의 소스(src)를 클릭한 Zone의 노래 파일 경로로 바꿉니다.
+            bgmPlayer.src = zoneData.audioSrc;
+            // 2) 플레이어 UI의 노래 제목을 바꿉니다.
+            trackTitleDisplay.textContent = zoneData.songTitle;
+            
+            // 3) 사용자가 이전에 화면을 한 번이라도 클릭했다면 바로 재생을 시작합니다.
+            if (isUserInteracted) {
+                bgmPlayer.play().then(() => updatePlayerUI()).catch(e => console.log("자동재생 방지됨"));
+            } else {
+                // 아직 상호작용 전이면 정보만 업데이트
+                updatePlayerUI();
+            }
+            
             let htmlString = `
                 <div class="absolute -top-10 -right-10 text-8xl md:text-9xl font-black text-gray-100 opacity-50 select-none pointer-events-none z-0">
                     ${zoneData.bgImageText}
