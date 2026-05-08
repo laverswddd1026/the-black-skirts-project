@@ -283,7 +283,7 @@
         <section class="bg-[#2c3e50] text-[#f4f1ea] p-8 md:p-16 rounded-2xl shadow-xl relative z-20">
             <div class="max-w-3xl mx-auto">
                 <div class="text-center mb-10">
-                    <h2 class="text-3xl font-bold mb-4 text-[#ffeb3b]">Interactive Object : '나랑 아니면' 방명록</h2>
+                    <h2 class="text-3xl font-bold mb-4 text-[#ffeb3b]">Interactive Object : 방명록</h2>
                     <p class="text-gray-300 font-light leading-relaxed">
                         전시의 마지막 동선에 배치될 거대한 방명록 존의 시뮬레이션입니다.<br>
                         검정치마의 노래를 들으며 떠오른 생각, 혹은 누군가에게 전하고 싶은 말을 남겨주세요.<br>
@@ -293,9 +293,9 @@
 
                 <form id="guestbookForm" class="bg-white/10 p-6 rounded-lg backdrop-blur-sm mb-10 border border-white/20">
                     <div class="flex flex-col md:flex-row gap-4">
-                        <input type="text" id="gbName" placeholder="작성자 (예: 무당벌레)" required class="px-4 py-3 bg-white/20 text-white placeholder-white/70 border border-white/30 rounded focus:outline-none focus:border-[#ffeb3b] md:w-1/4">
+                        <input type="text" id="gbName" placeholder="작성자 (예: 조휴일=)" required class="px-4 py-3 bg-white/20 text-white placeholder-white/70 border border-white/30 rounded focus:outline-none focus:border-[#ffeb3b] md:w-1/4">
                         <input type="text" id="gbMessage" placeholder="기억나는 가사나 메시지를 남겨주세요." required class="px-4 py-3 bg-white/20 text-white placeholder-white/70 border border-white/30 rounded focus:outline-none focus:border-[#ffeb3b] flex-grow">
-                        <button type="submit" class="bg-[#ffeb3b] text-[#2c3e50] font-bold px-8 py-3 rounded hover:bg-yellow-400 transition-colors">기록하기</button>
+                        <button type="submit" class="bg-[#ffeb3b] text-[#2c3e50] font-bold px-8 py-3 rounded hover:bg-yellow-400 transition-colors">기록</button>
                     </div>
                 </form>
 
@@ -399,11 +399,11 @@
                 { zoneId: 3, icon: "🗓️", imageTag: '<img src="nyquil.png">', category: "소품", name: "휴일 달력", material: "찢어진 갱지 달력", class: "워드플레이 소품", purpose: "이름 '조휴일'과 시간의 상실감 은유", lyrics: "달력의 빨간날은 다 내 생일이라 하던 그녀~ (빨간 나를)", desc: "모든 날이 붉은색 '휴일'로 칠해져 있지만, 곳곳이 찢겨나간 기묘한 달력. 달력 옆 수화기를 들면 빗소리와 섞인 미공개 데모가 흘러나온다.", owner: "자체 제작" },
 
                 // Zone 4
-                { zoneId: 4, icon: "📼", imageTag: "(추후 기입 예정)", category: "영화 소품", name: "단편영화 속 오브제들", material: "낡은 기타, 백팩, 의류", class: "세계관 연장선", purpose: "1999년 뉴저지의 틴에지 감성 재현", lyrics: "귀가 찢어질듯 매미가 울던 1999년의 여름밤 ~(Flying Bobs)", desc: "'Teen Troubles' 단편영화 주인공들이 실제로 사용했던 오브제 모음. 관람객을 단숨에 1999년 뜨거운 여름날의 미국 뉴저지로 데려간다.", owner: "전시 굿즈" },
-                { zoneId: 4, icon: "💊", imageTag: "(추후 기입 예정)", category: "소품", name: "NyQuil 옛날 광고", material: "빛바랜 잡지 스크랩, 철제 락커", class: "시대적 소품", purpose: "90년대 미국 너드 문화와 비행의 레퍼런스", lyrics: "Living on Nyquil and dreaming MTV~ (Flying Bobs)", desc: "90년대 미국 약국에서 흔히 볼 수 있었던 감기약 NyQuil 포스터. 하이스쿨 철제 락커룸에 붙어있으며, 조휴일의 불안정했던 10대 시절 기억을 상징한다.", owner: "섭외 물품" },
-                { zoneId: 4, icon: "📀", imageTag: "(추후 기입 예정)", category: "설치물", name: "앨범 커버 모빌", material: "아크릴판, 메탈 폴대, 낚시줄", class: "전시 하이라이트", purpose: "검정치마 디스코그래피의 총망라", lyrics: "(Our Own Summer 전주)", desc: "정규 1집부터 3집 Part 3까지의 모든 앨범 커버가 공중에서 천천히 교차하며 도는 대형 모빌. 검정치마가 구축해 온 음악적 서사의 종착지이자 새로운 시작점.", owner: "굿즈팀" },
-                { zoneId: 4, icon: "✝️", imageTag: "(추후 기입 예정)", category: "오브제", name: "성경, 마약", material: "낡은 가죽 성경, 플라스틱 알약 통", class: "스토리보드 소품", purpose: "10대 시절의 순수함과 타락의 극단적 대비", lyrics: "원래대로라면 재작년에 회개하고 불금에도 너랑 복음 따라 나갈 텐데~ (Sunday Girl)", desc: "3집 Part 3 앨범이 관통하는 '방황하는 10대'의 두 자아를 시각화한 전시물. 신성함과 일탈이 아슬아슬하게 공존하는 거친 청춘을 은유한다.", owner: "자체 구매" },
-                { zoneId: 4, icon: "🌳", imageTag: "(추후 기입 예정)", category: "설치물", name: "매미", material: "투명 레진, 박제 모형", class: "곡의 핵심 메타포", purpose: "'매미들' 곡의 청각적 심상을 시각화", lyrics: "밝고 짧게 타올라라, 밝고 짧게 타올라라~ (매미들)", desc: "1999년의 여름, 그 짧고 강렬했던 청춘의 계절을 은유하는 오브제. 레진 속에 갇힌 매미 가까이 다가가면 미세하고 아련한 매미 울음소리가 들린다.", owner: "자체 구매" }
+                { zoneId: 4, icon: "📼", imageTag: '<img src="holiday.png">', category: "영화 소품", name: "단편영화 속 오브제들", material: "낡은 기타, 백팩, 의류", class: "세계관 연장선", purpose: "1999년 뉴저지의 틴에지 감성 재현", lyrics: "귀가 찢어질듯 매미가 울던 1999년의 여름밤 ~(Flying Bobs)", desc: "'Teen Troubles' 단편영화 주인공들이 실제로 사용했던 오브제 모음. 관람객을 단숨에 1999년 뜨거운 여름날의 미국 뉴저지로 데려간다.", owner: "전시 굿즈" },
+                { zoneId: 4, icon: "💊", imageTag: '<img src="nyquil ad.jpeg">', category: "소품", name: "NyQuil 옛날 광고", material: "빛바랜 잡지 스크랩, 철제 락커", class: "시대적 소품", purpose: "90년대 미국 너드 문화와 비행의 레퍼런스", lyrics: "Living on Nyquil and dreaming MTV~ (Flying Bobs)", desc: "90년대 미국 약국에서 흔히 볼 수 있었던 감기약 NyQuil 포스터. 하이스쿨 철제 락커룸에 붙어있으며, 조휴일의 불안정했던 10대 시절 기억을 상징한다.", owner: "섭외 물품" },
+                { zoneId: 4, icon: "📀", imageTag: '<img src="album.jpeg">', category: "설치물", name: "앨범 커버 모빌", material: "아크릴판, 메탈 폴대, 낚시줄", class: "전시 하이라이트", purpose: "검정치마 디스코그래피의 총망라", lyrics: "(Our Own Summer 전주)", desc: "정규 1집부터 3집 Part 3까지의 모든 앨범 커버가 공중에서 천천히 교차하며 도는 대형 모빌. 검정치마가 구축해 온 음악적 서사의 종착지이자 새로운 시작점.", owner: "굿즈팀" },
+                { zoneId: 4, icon: "✝️", imageTag: '<img src="bible.png">', category: "오브제", name: "성경, 마약", material: "낡은 가죽 성경, 플라스틱 알약 통", class: "스토리보드 소품", purpose: "10대 시절의 순수함과 타락의 극단적 대비", lyrics: "원래대로라면 재작년에 회개하고 불금에도 너랑 복음 따라 나갈 텐데~ (Sunday Girl)", desc: "3집 Part 3 앨범이 관통하는 '방황하는 10대'의 두 자아를 시각화한 전시물. 신성함과 일탈이 아슬아슬하게 공존하는 거친 청춘을 은유한다.", owner: "자체 구매" },
+                { zoneId: 4, icon: "🌳", imageTag: '<img src="cicadas.png">', category: "설치물", name: "매미", material: "투명 레진, 박제 모형", class: "곡의 핵심 메타포", purpose: "'매미들' 곡의 청각적 심상을 시각화", lyrics: "밝고 짧게 타올라라, 밝고 짧게 타올라라~ (매미들)", desc: "1999년의 여름, 그 짧고 강렬했던 청춘의 계절을 은유하는 오브제. 레진 속에 갇힌 매미 가까이 다가가면 미세하고 아련한 매미 울음소리가 들린다.", owner: "자체 구매" }
 
             ]
         };
@@ -499,9 +499,9 @@
         }
 
         const mockMessages = [
-            { name: "Team Baby", msg: "넌 내 모든거야 내 여름이고 내 꿈이야." },
-            { name: "락키드", msg: "99년도 뉴저지 냄새가 나요ㅠㅠ" },
-            { name: "익명", msg: "나랑 아니면 누구랑 사랑할 수 있겠니" }
+            { name: "조휴일은신이다", msg: "넌 내 모든거야 내 여름이고 내 꿈이야." },
+            { name: "김민혁", msg: "99년도 뉴저지 냄새가 나요ㅠㅠ" },
+            { name: "이제우", msg: "나랑 아니면 누구랑 사랑할 수 있겠니" }
         ];
 
         function renderMessages() {
