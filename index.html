@@ -399,6 +399,33 @@
         <p class="mt-2">본 웹페이지는 '검정치마 전시 오브제 기획안' 제출을 위한 시뮬레이션 프로토타입입니다.</p>
     </footer>
 
+        <!-- ----------------------------------------------------
+         추가: HTML5 Audio 태그 (화면에는 안 보임)
+         ---------------------------------------------------- -->
+    <audio id="bgm-player" loop>
+        <source src="" type="audio/mpeg">
+        브라우저가 오디오 태그를 지원하지 않습니다.
+    </audio>
+
+    <!-- ----------------------------------------------------
+         추가: 좌측 하단 뮤직 플레이어 UI 위젯
+         ---------------------------------------------------- -->
+    <div id="music-player-widget">
+        <div class="record-disk">
+            <div class="record-label"></div>
+        </div>
+        <div class="track-info">
+            <div class="track-title" id="track-title-display">Antifreeze</div>
+            <div class="track-artist">검정치마 (The Black Skirts)</div>
+        </div>
+        <button class="play-btn" id="toggle-music-btn" aria-label="Play/Pause">
+            <!-- 재생 아이콘 (초기상태: 멈춤이므로 재생 버튼 표시) -->
+            <svg id="icon-play" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            <!-- 일시정지 아이콘 (기본 숨김) -->
+            <svg id="icon-pause" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="hidden"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+        </button>
+    </div>
+    
     <!-- AI 도슨트 플로팅 버튼 & 패널 -->
     <button id="ai-chat-btn" class="bg-[#c13a3a] text-white p-4 rounded-full shadow-lg flex items-center justify-center hover:bg-red-800">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
