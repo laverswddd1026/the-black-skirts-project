@@ -270,7 +270,24 @@
 
     <div class="noise-bg"></div>
 
-    <!-- Header / Hero Section -->
+        <!-- ----------------------------------------------------
+         추가된 네비게이션 바 영역
+         ---------------------------------------------------- -->
+    <nav class="absolute top-0 left-0 w-full z-[100] bg-transparent">
+        <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-end">
+            <div class="flex gap-8 text-sm font-bold uppercase tracking-widest drop-shadow-md">
+                <button onclick="switchTab('home')" id="nav-home" class="text-[#c13a3a] hover:text-[#c13a3a] transition-colors">Home</button>
+                <button onclick="switchTab('information')" id="nav-information" class="text-gray-400 hover:text-white transition-colors">Information</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ----------------------------------------------------
+         View 1: Home 화면
+         ---------------------------------------------------- -->
+    <div id="view-home" class="page-view block">
+        <!-- Header / Hero Section -->
+        <!-- 네비게이션 바 공간 확보를 위해 pt-28 추가 -->
     <header class="bg-[#111] text-[#f4f1ea] py-20 px-6 border-b-8 border-[#c13a3a] relative overflow-hidden">
         <div class="max-w-5xl mx-auto relative z-10 text-center">
             <p class="text-sm font-bold tracking-widest text-[#c13a3a] mb-4">EXHIBITION OBJECT PROPOSAL</p>
@@ -398,7 +415,30 @@
         <p>기획안 작성자 : 12213240 김민혁 / 12252424 이제우</p>
         <p class="mt-2">본 웹페이지는 '검정치마 전시 오브제 기획안' 제출을 위한 시뮬레이션 프로토타입입니다.</p>
     </footer>
+    </div> <!-- // view-home 끝 -->
 
+    <!-- ----------------------------------------------------
+         View 2: Information 화면 (추후 오픈 예정)
+         ---------------------------------------------------- -->
+    <div id="view-information" class="page-view hidden min-h-screen flex items-center justify-center bg-[#111] relative overflow-hidden z-20">
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[12rem] md:text-[20rem] font-black text-gray-800 opacity-10 select-none z-0 tracking-tighter">MAP</div>
+        <div class="text-center text-[#f4f1ea] z-10 p-8 border border-gray-700 bg-black/60 backdrop-blur-lg rounded-2xl shadow-2xl max-w-lg w-full mx-6">
+            <div class="w-20 h-20 bg-[#c13a3a] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <h2 class="text-3xl font-bold mb-4">Information</h2>
+            <p class="text-gray-400 font-light mb-8 leading-relaxed">
+                전시 공간 도면 및 상세 관람 동선은<br>
+                <span class="text-white font-bold">오픈 준비 중</span>입니다. 조금만 기다려주세요!
+            </p>
+            <div class="w-full bg-gray-800 rounded-full h-1.5 mb-2 overflow-hidden">
+                <div class="bg-[#c13a3a] h-1.5 rounded-full" style="width: 45%"></div>
+            </div>
+            <p class="text-xs text-gray-500 uppercase tracking-widest mt-4">Loading Data...</p>
+        </div>
+    </div>
+
+    
         <!-- ----------------------------------------------------
          추가: HTML5 Audio 태그 (화면에는 안 보임)
          ---------------------------------------------------- -->
@@ -457,6 +497,32 @@
 
     <!-- JavaScript Logic -->
     <script>
+        // ---------------------------------------------------------------------------------
+        // [1] 뷰 전환 로직 (Home <-> Information)
+        // ---------------------------------------------------------------------------------
+        function switchTab(tabId) {
+            // 모든 뷰 숨기기
+            document.querySelectorAll('.page-view').forEach(view => {
+                view.classList.add('hidden');
+                view.classList.remove('block');
+            });
+            // 모든 네비게이션 텍스트 색상 초기화 (회색)
+            document.getElementById('nav-home').classList.remove('text-[#c13a3a]');
+            document.getElementById('nav-home').classList.add('text-gray-400');
+            document.getElementById('nav-information').classList.remove('text-[#c13a3a]');
+            document.getElementById('nav-information').classList.add('text-gray-400');
+
+            // 선택된 뷰 보이기
+            document.getElementById('view-' + tabId).classList.remove('hidden');
+            document.getElementById('view-' + tabId).classList.add('block');
+            // 선택된 탭 강조 (빨간색)
+            document.getElementById('nav-' + tabId).classList.add('text-[#c13a3a]');
+            document.getElementById('nav-' + tabId).classList.remove('text-gray-400');
+            
+            // 상단으로 스크롤 이동
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
         const exhibitionData = {
             zones: [
                 {
